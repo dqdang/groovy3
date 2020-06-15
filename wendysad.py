@@ -4,6 +4,7 @@ from discord.ext import commands
 import os
 from datetime import datetime
 import pytz
+import time
 
 CHANNEL_NAME = os.getenv("CHANNEL_NAME")
 # SERVER = os.getenv("DISCORD_SERVER")
@@ -95,6 +96,7 @@ async def on_voice_state_update(member, before, after):
                 msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
 
         # Try to log the voice event to the channel
+        time.sleep(5)
         try:
             await channel.send(msg, tts=True)
         except:
@@ -110,8 +112,6 @@ async def on_voice_state_update(member, before, after):
                 except discord.DiscordException as exception:
                     print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
 
-        # Add functionality to join voice channel
-        # - 3-5 sec. delay
         # - massive ping attack
         # vc = find_voice_channel()
 
