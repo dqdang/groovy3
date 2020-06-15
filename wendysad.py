@@ -3,6 +3,8 @@ import discord
 from discord.ext import commands
 import os
 from datetime import datetime
+import pytz
+
 
 CHANNEL_NAME = os.getenv("CHANNEL_NAME")
 # SERVER = os.getenv("DISCORD_SERVER")
@@ -44,7 +46,8 @@ async def on_voice_state_update(member, before, after):
     :param before: The state of the member before the change.
     :param after: The state of the member after the change.
     """
-    if member.display_name == "Dango Kuhaku" or member.display_name == "wendysad":
+    tz_CE = pytz.timezone('Canada/Eastern') 
+    if member.top_role == "PLACEHOLDER" or member.display_name == "wendysad":
         server = after.channel.guild
         channel = find_channel(server)
 
@@ -57,18 +60,18 @@ async def on_voice_state_update(member, before, after):
 
         if voice_channel_before == None:
             # The member was not on a voice channel before the change
-            now = datetime.now().time()
-            msg = "%s joined voice channel _%s_ at %s" % (member.display_name, voice_channel_after.name, now)
+            datetime_CE = datetime.now(tz_CE)
+            msg = "%s joined voice channel _%s_ at %s" % (member.display_name, voice_channel_after.name, datetime_CE)
         else:
             # The member was on a voice channel before the change
             if voice_channel_after == None:
                 # The member is no longer on a voice channel after the change
-                now = datetime.now().time()
-                msg = "%s left voice channel _%s_ at %s" % (member.display_name, voice_channel_before.name, now)
+                datetime_CE = datetime.now(tz_CE)
+                msg = "%s left voice channel _%s_ at %s" % (member.display_name, voice_channel_before.name, datetime_CE)
             else:
                 # The member is still on a voice channel after the change
-                now = datetime.now().time()
-                msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, now)
+                datetime_CE = datetime.now(tz_CE)
+                msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
 
         # Try to log the voice event to the channel
         try:
@@ -86,5 +89,8 @@ async def on_voice_state_update(member, before, after):
                     await channel.send(msg)
                 except discord.DiscordException as exception:
                     print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
+
+        # Add functionality to join voice channel
+        # - 3-5 sec. delay
 
 client.run(TOKEN)
