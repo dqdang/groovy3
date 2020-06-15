@@ -66,7 +66,7 @@ async def on_voice_state_update(member, before, after):
     """
     tz_CE = pytz.timezone('Canada/Eastern')
     state = ""
-    if member.top_role == "PLACEHOLDER_ROLE" or member.display_name == "wendysad":
+    if member.top_role == "W_ROLE" or member.top_role == "P_ROLE" or member.display_name == "wendysad" or member.display_name == "JoyJenerator":
         try:
             server = after.channel.guild
         except:
@@ -101,30 +101,31 @@ async def on_voice_state_update(member, before, after):
         if member.top_role == "P_ROLE" or member.display_name == "JoyJenerator":
             set_patrick(msg)
 
-        # Try to log the voice event to the channel
-        try:
-            msg = get_patrick(state)
-            await channel.send(msg, delete_after=0)
-            time.sleep(3)
-            await channel.send(msg, tts=True)
-            # for i in range(15):
-            #     await channel.send("@ROLE")
-        except:
-            # No message could be sent to the channel; force refresh the channel cache and try again
-            channel = find_channel(server, refresh=True)
-            if channel == None:
-                # The channel could not be found
-                print("Error: channel #%s does not exist on server %s." % (CHANNEL_NAME, server))
-            else:
-                # Try sending a message again
-                try:
-                    msg = get_patrick(state)
-                    await channel.send(msg, delete_after=0)
-                    time.sleep(3)
-                    await channel.send(msg, tts=True)
-                    # for i in range(15):
-                    #     await channel.send("@ROLE")
-                except discord.DiscordException as exception:
-                    print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
+        if member.display_name == "wendyhappy" or member.display_name == "wendysad":
+            # Try to log the voice event to the channel
+            try:
+                msg = get_patrick(state)
+                await channel.send(msg, delete_after=0)
+                time.sleep(3)
+                await channel.send(msg, tts=True)
+                # for i in range(15):
+                #     await channel.send("@ROLE")
+            except:
+                # No message could be sent to the channel; force refresh the channel cache and try again
+                channel = find_channel(server, refresh=True)
+                if channel == None:
+                    # The channel could not be found
+                    print("Error: channel #%s does not exist on server %s." % (CHANNEL_NAME, server))
+                else:
+                    # Try sending a message again
+                    try:
+                        msg = get_patrick(state)
+                        await channel.send(msg, delete_after=0)
+                        time.sleep(3)
+                        await channel.send(msg, tts=True)
+                        # for i in range(15):
+                        #     await channel.send("@ROLE")
+                    except discord.DiscordException as exception:
+                        print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
 
 client.run(TOKEN)
