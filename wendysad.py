@@ -1,8 +1,8 @@
 import asyncio
+from datetime import datetime
 import discord
 from discord.ext import commands
 import os
-from datetime import datetime
 import pytz
 import time
 
@@ -11,7 +11,25 @@ CHANNEL_NAME = os.getenv("CHANNEL_NAME")
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 server_channels = {} # Server channel cache
+patrick_seen = {"name":"Patrick", "before":None, "after":None, "switched":None}
 client = discord.Client()
+
+def get_patrick(state):
+    if state == "before":
+        return patrick_seen["before"]
+    if state == "after":
+        return patrick_seen["after"]
+    if state == "switched":
+        return patrick_seen["switched"]
+    return None
+
+def set_patrick(timestamp):
+    if "joined" in timestamp:
+        patrick_seen["before"] = timestamp
+    elif "left" in timestamp:
+        patrick_seen["after"] = timestamp
+    elif "switched" in timestamp:
+        patrick_seen["switched"] = timestamp
 
 def find_channel(server, refresh = False):
     """
@@ -46,7 +64,8 @@ async def on_voice_state_update(member, before, after):
     :param before: The state of the member before the change.
     :param after: The state of the member after the change.
     """
-    tz_CE = pytz.timezone('Canada/Eastern') 
+    tz_CE = pytz.timezone('Canada/Eastern')
+    state = ""
     if member.top_role == "PLACEHOLDER_ROLE" or member.display_name == "wendysad":
         try:
             server = after.channel.guild
@@ -65,19 +84,26 @@ async def on_voice_state_update(member, before, after):
             # The member was not on a voice channel before the change
             datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
             msg = "%s joined voice channel _%s_ at %s" % (member.display_name, voice_channel_after.name, datetime_CE)
+            state = "before"
         else:
             # The member was on a voice channel before the change
             if voice_channel_after == None:
                 # The member is no longer on a voice channel after the change
                 datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
                 msg = "%s left voice channel _%s_ at %s" % (member.display_name, voice_channel_before.name, datetime_CE)
+                state = "after"
             else:
                 # The member is still on a voice channel after the change
                 datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
                 msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
+                state = "switched"
+
+        if member.top_role == "P_ROLE" or member.display_name == "JoyJenerator":
+            set_patrick(msg)
 
         # Try to log the voice event to the channel
         try:
+            msg = get_patrick(state)
             await channel.send(msg, delete_after=0)
             time.sleep(3)
             await channel.send(msg, tts=True)
@@ -92,6 +118,7 @@ async def on_voice_state_update(member, before, after):
             else:
                 # Try sending a message again
                 try:
+                    msg = get_patrick(state)
                     await channel.send(msg, delete_after=0)
                     time.sleep(3)
                     await channel.send(msg, tts=True)
