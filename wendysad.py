@@ -97,7 +97,7 @@ async def on_voice_state_update(member, before, after):
 
         # Try to log the voice event to the channel
         try:
-            await channel.send(msg, delete_after=5.0)
+            await channel.send(msg, delete_after=4.0)
             time.sleep(5)
             await channel.send(msg, tts=True)
         except:
@@ -109,7 +109,7 @@ async def on_voice_state_update(member, before, after):
             else:
                 # Try sending a message again
                 try:
-                    await channel.send(msg, delete_after=5.0)
+                    await channel.send(msg, delete_after=4.0)
                     time.sleep(5)
                     await channel.send(msg, tts=True)
                 except discord.DiscordException as exception:
