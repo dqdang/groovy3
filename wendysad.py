@@ -87,6 +87,7 @@ async def on_voice_state_update(member, before, after):
     """
     tz_CE = pytz.timezone('Canada/Eastern')
     state = ""
+
     if member.top_role == W_ROLE or member.top_role == P_ROLE or member.display_name == "wendysad" or member.display_name == "JoyJenerator":
         try:
             server = after.channel.guild
