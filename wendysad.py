@@ -22,7 +22,7 @@ def find_channel(server, refresh = False):
         return server_channels[server]
 
     for channel in client.get_all_channels():
-        if channel.server == server and channel.name == CHANNEL_NAME:
+        if channel.guild == server and channel.name == CHANNEL_NAME:
             print("%s: refreshed destination log channel" % server)
             server_channels[server] = channel
             return channel
