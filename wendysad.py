@@ -98,7 +98,7 @@ async def on_voice_state_update(member, before, after):
         # Try to log the voice event to the channel
         try:
             await channel.send(msg, delete_after=0)
-            time.sleep(5)
+            time.sleep(3)
             await channel.send(msg, tts=True)
             # for i in range(15):
             #     await channel.send("@ROLE")
@@ -112,7 +112,7 @@ async def on_voice_state_update(member, before, after):
                 # Try sending a message again
                 try:
                     await channel.send(msg, delete_after=0)
-                    time.sleep(5)
+                    time.sleep(3)
                     await channel.send(msg, tts=True)
                     # for i in range(15):
                     #     await channel.send("@ROLE")
