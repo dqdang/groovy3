@@ -36,8 +36,6 @@ async def on_ready():
     print(client.user.id)
     print('------')
 
-
-
 @client.event
 async def on_voice_state_update(member, before, after):
     """
@@ -60,17 +58,17 @@ async def on_voice_state_update(member, before, after):
         if voice_channel_before == None:
             # The member was not on a voice channel before the change
             now = datetime.now().time()
-            msg = "%s joined voice channel _%s_ at %s" % (after.mention, voice_channel_after.name, now)
+            msg = "%s joined voice channel _%s_ at %s" % (member.display_name, voice_channel_after.name, now)
         else:
             # The member was on a voice channel before the change
             if voice_channel_after == None:
                 # The member is no longer on a voice channel after the change
                 now = datetime.now().time()
-                msg = "%s left voice channel _%s_ at %s" % (after.mention, voice_channel_before.name, now)
+                msg = "%s left voice channel _%s_ at %s" % (member.display_name, voice_channel_before.name, now)
             else:
                 # The member is still on a voice channel after the change
                 now = datetime.now().time()
-                msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (after.mention, voice_channel_before.name, voice_channel_after.name, now)
+                msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, now)
 
         # Try to log the voice event to the channel
         try:
