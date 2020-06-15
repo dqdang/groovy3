@@ -66,7 +66,7 @@ async def on_voice_state_update(member, before, after):
     :param after: The state of the member after the change.
     """
     tz_CE = pytz.timezone('Canada/Eastern') 
-    if member.top_role == "PLACEHOLDER" or member.display_name == "wendysad":
+    if member.top_role == "PLACEHOLDER_ROLE" or member.display_name == "wendysad":
         try:
             server = after.channel.guild
         except:
@@ -97,9 +97,11 @@ async def on_voice_state_update(member, before, after):
 
         # Try to log the voice event to the channel
         try:
-            await channel.send(msg, delete_after=4.0)
+            await channel.send(msg, delete_after=2.0)
             time.sleep(5)
             await channel.send(msg, tts=True)
+            # for i in range(15):
+            #     await channel.send("@ROLE")
         except:
             # No message could be sent to the channel; force refresh the channel cache and try again
             channel = find_channel(server, refresh=True)
@@ -109,12 +111,12 @@ async def on_voice_state_update(member, before, after):
             else:
                 # Try sending a message again
                 try:
-                    await channel.send(msg, delete_after=4.0)
+                    await channel.send(msg, delete_after=2.0)
                     time.sleep(5)
                     await channel.send(msg, tts=True)
+                    # for i in range(15):
+                    #     await channel.send("@ROLE")
                 except discord.DiscordException as exception:
                     print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
-
-        # Add ping attack
 
 client.run(TOKEN)
