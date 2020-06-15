@@ -96,23 +96,25 @@ async def on_voice_state_update(member, before, after):
                 msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
 
         # Try to log the voice event to the channel
-        time.sleep(5)
         try:
+            await channel.send(msg, delete_after=5.0)
+            time.sleep(5)
             await channel.send(msg, tts=True)
         except:
             # No message could be sent to the channel; force refresh the channel cache and try again
-            channel = find_channel(server, refresh = True)
+            channel = find_channel(server, refresh=True)
             if channel == None:
                 # The channel could not be found
                 print("Error: channel #%s does not exist on server %s." % (CHANNEL_NAME, server))
             else:
                 # Try sending a message again
                 try:
-                    await channel.send(msg,tts=True)
+                    await channel.send(msg, delete_after=5.0)
+                    time.sleep(5)
+                    await channel.send(msg, tts=True)
                 except discord.DiscordException as exception:
                     print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
 
-        # - massive ping attack
-        # vc = find_voice_channel()
+        # Add ping attack
 
 client.run(TOKEN)
