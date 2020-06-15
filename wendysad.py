@@ -141,7 +141,7 @@ async def on_voice_state_update(member, before, after):
                 else:
                     # Try sending a message again
                     try:
-                        msg = get_patrick(state)
+                        msg = get_patrick()
                         await channel.send(msg, delete_after=0)
                         time.sleep(3)
                         await channel.send(msg, tts=True)
