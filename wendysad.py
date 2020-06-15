@@ -6,8 +6,8 @@ import os
 import pytz
 import time
 
-CHANNEL_NAME = os.getenv("CHANNEL_NAME")
 # SERVER = os.getenv("DISCORD_SERVER")
+CHANNEL_NAME = os.getenv("CHANNEL_NAME")
 TOKEN = os.getenv("DISCORD_TOKEN")
 P_ROLE = os.getenv("P_ROLE")
 W_ROLE = os.getenv("W_ROLE")
@@ -65,7 +65,6 @@ def find_role(server):
 
     :param server: The server to find the role for.
     """
-
     for role in server.roles:
         if role.name == CHANNEL_NAME:
             return role
