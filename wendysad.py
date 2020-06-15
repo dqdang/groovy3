@@ -8,22 +8,32 @@ import time
 
 CHANNEL_NAME = os.getenv("CHANNEL_NAME")
 # SERVER = os.getenv("DISCORD_SERVER")
-TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = os.getenv("DISCORD_TOKEN")
+P_ROLE = os.getenv("P_ROLE")
+W_ROLE = os.getenv("W_ROLE")
 
 server_channels = {} # Server channel cache
-patrick_seen = {"name":"Patrick", "before":None, "after":None, "switched":None}
+patrick_seen = {"before":None, "after":None, "switched":None}
 client = discord.Client()
 
-def get_patrick(state):
-    if state == "before":
-        return patrick_seen["before"]
-    if state == "after":
-        return patrick_seen["after"]
-    if state == "switched":
-        return patrick_seen["switched"]
-    return None
+def get_patrick():
+    """
+    Return Dango's last seen location with a timestamp 
+    """
+    # if state == "before":
+    #     return patrick_seen["before"]
+    # if state == "after":
+    #     return patrick_seen["after"]
+    # if state == "switched":
+    #     return patrick_seen["switched"]
+    return patrick_seen["after"]
 
 def set_patrick(timestamp):
+    """
+    Set Dango's last seen location with a timestamp 
+
+    :param timestamp: The time and message to save
+    """
     if "joined" in timestamp:
         patrick_seen["before"] = timestamp
     elif "left" in timestamp:
@@ -49,6 +59,18 @@ def find_channel(server, refresh = False):
 
     return None
 
+def find_role(server):
+    """
+    Find and return the role to pass the message to.
+
+    :param server: The server to find the role for.
+    """
+
+    for role in server.roles:
+        if role.name == CHANNEL_NAME:
+            return role
+    return None
+
 @client.event
 async def on_ready():
     print('Logged in as')
@@ -66,7 +88,7 @@ async def on_voice_state_update(member, before, after):
     """
     tz_CE = pytz.timezone('Canada/Eastern')
     state = ""
-    if member.top_role == "W_ROLE" or member.top_role == "P_ROLE" or member.display_name == "wendysad" or member.display_name == "JoyJenerator":
+    if member.top_role == W_ROLE or member.top_role == P_ROLE or member.display_name == "wendysad" or member.display_name == "JoyJenerator":
         try:
             server = after.channel.guild
         except:
@@ -98,18 +120,19 @@ async def on_voice_state_update(member, before, after):
                 msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
                 state = "switched"
 
-        if member.top_role == "P_ROLE" or member.display_name == "JoyJenerator":
+        if member.top_role == P_ROLE or member.display_name == "JoyJenerator":
             set_patrick(msg)
 
-        if member.display_name == "wendyhappy" or member.display_name == "wendysad":
+        if member.top_role == W_ROLE or member.display_name == "wendysad" and state == "before":
             # Try to log the voice event to the channel
             try:
-                msg = get_patrick(state)
+                msg = get_patrick()
                 await channel.send(msg, delete_after=0)
                 time.sleep(3)
                 await channel.send(msg, tts=True)
+                # role = find_role(server)
                 # for i in range(15):
-                #     await channel.send("@ROLE")
+                #     await channel.send(role.mention)
             except:
                 # No message could be sent to the channel; force refresh the channel cache and try again
                 channel = find_channel(server, refresh=True)
@@ -123,8 +146,9 @@ async def on_voice_state_update(member, before, after):
                         await channel.send(msg, delete_after=0)
                         time.sleep(3)
                         await channel.send(msg, tts=True)
+                        # role = find_role(server)
                         # for i in range(15):
-                        #     await channel.send("@ROLE")
+                        #     await channel.send(role.mention)
                     except discord.DiscordException as exception:
                         print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
 
