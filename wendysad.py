@@ -47,11 +47,11 @@ async def on_voice_state_update(member, before, after):
     :param after: The state of the member after the change.
     """
     if member.display_name == "Dango Kuhaku" or member.display_name == "wendysad":
-        server = after.server
+        server = after.channel.guild
         channel = find_channel(server)
 
-        voice_channel_before = before.voice_channel
-        voice_channel_after = after.voice_channel
+        voice_channel_before = before.channel
+        voice_channel_after = after.channel
 
         if voice_channel_before == voice_channel_after:
             # No change
@@ -59,15 +59,18 @@ async def on_voice_state_update(member, before, after):
 
         if voice_channel_before == None:
             # The member was not on a voice channel before the change
-            msg = "%s joined voice channel _%s_" % (after.mention, voice_channel_after.name)
+            now = datetime.now().time()
+            msg = "%s joined voice channel _%s_ at %s" % (after.mention, voice_channel_after.name, now)
         else:
             # The member was on a voice channel before the change
             if voice_channel_after == None:
                 # The member is no longer on a voice channel after the change
-                msg = "%s left voice channel _%s_" % (after.mention, voice_channel_before.name)
+                now = datetime.now().time()
+                msg = "%s left voice channel _%s_ at %s" % (after.mention, voice_channel_before.name, now)
             else:
                 # The member is still on a voice channel after the change
-                msg = "%s switched from voice channel _%s_ to _%s_" % (after.mention, voice_channel_before.name, voice_channel_after.name)
+                now = datetime.now().time()
+                msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (after.mention, voice_channel_before.name, voice_channel_after.name, now)
 
         # Try to log the voice event to the channel
         try:
