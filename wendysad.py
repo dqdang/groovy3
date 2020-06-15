@@ -72,7 +72,7 @@ async def on_voice_state_update(member, before, after):
 
         # Try to log the voice event to the channel
         try:
-            channel.send(msg)
+            await channel.send(msg)
         except:
             # No message could be sent to the channel; force refresh the channel cache and try again
             channel = find_channel(server, refresh = True)
@@ -83,7 +83,7 @@ async def on_voice_state_update(member, before, after):
                 # Try sending a message again
                 try:
                     # await client.send_message(channel, msg)
-                    channel.send(msg)
+                    await channel.send(msg)
                 except discord.DiscordException as exception:
                     print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
 
