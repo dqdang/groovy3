@@ -31,25 +31,6 @@ def find_channel(server, refresh = False):
 
     return None
 
-def find_voice_channel():
-    """
-    Find and return the channel to log the voice events to.
-
-    :param server: The server to find the channel for.
-    :param refresh: Whether to refresh the channel cache for this server.
-    """
-    if not refresh and server in server_channels:
-        return server_channels[server]
-
-    for channel in client.get_all_channels():
-        # if channel.guild == server and channel.name == CHANNEL_NAME:
-        if len(channel.voice_states.items()) > 1:
-            print("%s: current voice channel" % server)
-            server_channels[server] = channel
-            return channel
-
-    return None
-
 @client.event
 async def on_ready():
     print('Logged in as')
