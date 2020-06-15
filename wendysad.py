@@ -66,8 +66,9 @@ async def on_voice_state_update(member, before, after):
     """
     tz_CE = pytz.timezone('Canada/Eastern') 
     if member.top_role == "PLACEHOLDER" or member.display_name == "wendysad":
-        server = before.channel.guild
-        channel = find_channel(server)
+        enter_server = after.channel.guild
+        left_server = before.channel.guild
+        channel = find_channel(enter_server)
 
         voice_channel_before = before.channel
         voice_channel_after = after.channel
@@ -93,17 +94,16 @@ async def on_voice_state_update(member, before, after):
 
         # Try to log the voice event to the channel
         try:
+            channel = find_channel(left_server, refresh = True)
             await channel.send(msg, tts=True)
         except:
             # No message could be sent to the channel; force refresh the channel cache and try again
-            channel = find_channel(server, refresh = True)
             if channel == None:
                 # The channel could not be found
                 print("Error: channel #%s does not exist on server %s." % (CHANNEL_NAME, server))
             else:
                 # Try sending a message again
                 try:
-                    # await client.send_message(channel, msg)
                     await channel.send(msg,tts=True)
                 except discord.DiscordException as exception:
                     print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
