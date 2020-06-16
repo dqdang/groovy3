@@ -59,14 +59,15 @@ def find_channel(server, refresh = False):
 
     return None
 
-def find_role(server):
+def find_role(member, key):
     """
     Find and return the role to pass the message to.
 
     :param server: The server to find the role for.
+    :param key: The role to select
     """
-    for role in server.roles:
-        if role.name == CHANNEL_NAME:
+    for role in member.roles:
+        if role.name == key:
             return role
     return None
 
@@ -88,7 +89,10 @@ async def on_voice_state_update(member, before, after):
     tz_CE = pytz.timezone('Canada/Eastern')
     state = ""
 
-    if member.top_role == W_ROLE or member.top_role == P_ROLE or member.display_name == "wendysad" or member.display_name == "JoyJenerator":
+    w_member_role = find_role(member, W_ROLE)
+    p_member_role = find_role(member, P_ROLE)
+
+    if w_member_role or p_member_role or member.display_name == "wendysad" or member.display_name == "JoyJenerator":
         try:
             server = after.channel.guild
         except:
@@ -120,19 +124,18 @@ async def on_voice_state_update(member, before, after):
                 msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
                 state = "switched"
 
-        if member.top_role == P_ROLE or member.display_name == "JoyJenerator":
+        if p_member_role or member.display_name == "JoyJenerator":
             set_patrick(msg)
 
-        if member.top_role == W_ROLE or member.display_name == "wendysad" and state == "before":
+        if w_member_role or member.display_name == "wendysad" and state == "before":
             # Try to log the voice event to the channel
             try:
                 msg = get_patrick()
                 await channel.send(msg, delete_after=0)
                 time.sleep(3)
                 await channel.send(msg, tts=True)
-                # role = find_role(server)
                 # for i in range(15):
-                #     await channel.send(role.mention)
+                #     await channel.send(w_member_role.mention)
             except:
                 # No message could be sent to the channel; force refresh the channel cache and try again
                 channel = find_channel(server, refresh=True)
@@ -146,9 +149,8 @@ async def on_voice_state_update(member, before, after):
                         await channel.send(msg, delete_after=0)
                         time.sleep(3)
                         await channel.send(msg, tts=True)
-                        # role = find_role(server)
                         # for i in range(15):
-                        #     await channel.send(role.mention)
+                        #     await channel.send(w_member_role.mention)
                     except discord.DiscordException as exception:
                         print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
 
