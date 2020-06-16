@@ -18,7 +18,7 @@ client = discord.Client()
 
 def get_patrick():
     """
-    Return Dango's last seen location with a timestamp 
+    Return Dango's last seen location with a timestamp
     """
     # if state == "before":
     #     return patrick_seen["before"]
@@ -30,7 +30,7 @@ def get_patrick():
 
 def set_patrick(timestamp):
     """
-    Set Dango's last seen location with a timestamp 
+    Set Dango's last seen location with a timestamp
 
     :param timestamp: The time and message to save
     """
@@ -40,6 +40,7 @@ def set_patrick(timestamp):
         patrick_seen["after"] = timestamp
     elif "switched" in timestamp:
         patrick_seen["switched"] = timestamp
+    return
 
 def find_channel(server, refresh = False):
     """
@@ -66,9 +67,13 @@ def find_role(member, key):
     :param server: The server to find the role for.
     :param key: The role to select
     """
+    if not member:
+        return None
+
     for role in member.roles:
         if role.name == key:
             return role
+
     return None
 
 @client.event
