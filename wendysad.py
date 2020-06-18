@@ -12,9 +12,10 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 P_ROLE = os.getenv("P_ROLE")
 W_ROLE = os.getenv("W_ROLE")
 
-server_channels = {} # Server channel cache
-patrick_seen = {"before":None, "after":None, "switched":None}
+server_channels = {}  # Server channel cache
+patrick_seen = {"before": None, "after": None, "switched": None}
 client = discord.Client()
+
 
 def get_patrick():
     """
@@ -27,6 +28,7 @@ def get_patrick():
     # if state == "switched":
     #     return patrick_seen["switched"]
     return patrick_seen["after"]
+
 
 def set_patrick(timestamp):
     """
@@ -42,7 +44,8 @@ def set_patrick(timestamp):
         patrick_seen["switched"] = timestamp
     return
 
-def find_channel(server, refresh = False):
+
+def find_channel(server, refresh=False):
     """
     Find and return the channel to log the voice events to.
 
@@ -60,6 +63,7 @@ def find_channel(server, refresh = False):
 
     return None
 
+
 def find_role(member, key):
     """
     Find and return the role to pass the message to.
@@ -76,12 +80,14 @@ def find_role(member, key):
 
     return None
 
+
 @client.event
 async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
     print('------')
+
 
 @client.event
 async def on_voice_state_update(member, before, after):
@@ -114,19 +120,22 @@ async def on_voice_state_update(member, before, after):
         if voice_channel_before == None:
             # The member was not on a voice channel before the change
             datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
-            msg = "%s joined voice channel _%s_ at %s" % (member.display_name, voice_channel_after.name, datetime_CE)
+            msg = "%s joined voice channel _%s_ at %s" % (
+                member.display_name, voice_channel_after.name, datetime_CE)
             state = "before"
         else:
             # The member was on a voice channel before the change
             if voice_channel_after == None:
                 # The member is no longer on a voice channel after the change
                 datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
-                msg = "%s left voice channel _%s_ at %s" % (member.display_name, voice_channel_before.name, datetime_CE)
+                msg = "%s left voice channel _%s_ at %s" % (
+                    member.display_name, voice_channel_before.name, datetime_CE)
                 state = "after"
             else:
                 # The member is still on a voice channel after the change
                 datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
-                msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
+                msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (
+                    member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
                 state = "switched"
 
         if p_member_role or member.display_name == "JoyJenerator":
@@ -146,7 +155,8 @@ async def on_voice_state_update(member, before, after):
                 channel = find_channel(server, refresh=True)
                 if channel == None:
                     # The channel could not be found
-                    print("Error: channel #%s does not exist on server %s." % (CHANNEL_NAME, server))
+                    print("Error: channel #%s does not exist on server %s." %
+                          (CHANNEL_NAME, server))
                 else:
                     # Try sending a message again
                     try:
@@ -157,6 +167,7 @@ async def on_voice_state_update(member, before, after):
                         # for i in range(15):
                         #     await channel.send(w_member_role.mention)
                     except discord.DiscordException as exception:
-                        print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (CHANNEL_NAME, server, exception))
+                        print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (
+                            CHANNEL_NAME, server, exception))
 
 client.run(TOKEN)
