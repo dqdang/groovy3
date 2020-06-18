@@ -13,35 +13,35 @@ P_ROLE = os.getenv("P_ROLE")
 W_ROLE = os.getenv("W_ROLE")
 
 server_channels = {}  # Server channel cache
-patrick_seen = {"before": None, "after": None, "switched": None}
+p_seen = {"before": None, "after": None, "switched": None}
 client = discord.Client()
 
 
-def get_patrick():
+def get_p():
     """
-    Return Dango's last seen location with a timestamp
+    Return my boy's last seen location with a timestamp
     """
     # if state == "before":
-    #     return patrick_seen["before"]
+    #     return p_seen["before"]
     # if state == "after":
-    #     return patrick_seen["after"]
+    #     return p_seen["after"]
     # if state == "switched":
-    #     return patrick_seen["switched"]
-    return patrick_seen["after"]
+    #     return p_seen["switched"]
+    return p_seen["after"]
 
 
-def set_patrick(timestamp):
+def set_p(timestamp):
     """
     Set Dango's last seen location with a timestamp
 
     :param timestamp: The time and message to save
     """
     if "joined" in timestamp:
-        patrick_seen["before"] = timestamp
+        p_seen["before"] = timestamp
     elif "left" in timestamp:
-        patrick_seen["after"] = timestamp
+        p_seen["after"] = timestamp
     elif "switched" in timestamp:
-        patrick_seen["switched"] = timestamp
+        p_seen["switched"] = timestamp
     return
 
 
@@ -139,12 +139,12 @@ async def on_voice_state_update(member, before, after):
                 state = "switched"
 
         if p_member_role or member.display_name == "JoyJenerator":
-            set_patrick(msg)
+            set_p(msg)
 
         if w_member_role or member.display_name == "wendysad" and state == "before":
             # Try to log the voice event to the channel
             try:
-                msg = get_patrick()
+                msg = get_p()
                 await channel.send(msg, delete_after=0)
                 time.sleep(3)
                 await channel.send(msg, tts=True)
@@ -160,7 +160,7 @@ async def on_voice_state_update(member, before, after):
                 else:
                     # Try sending a message again
                     try:
-                        msg = get_patrick()
+                        msg = get_p()
                         await channel.send(msg, delete_after=0)
                         time.sleep(3)
                         await channel.send(msg, tts=True)
