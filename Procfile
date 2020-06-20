@@ -1,1 +1,1 @@
-worker: python wendysad.py
+worker: python groovy3.py
