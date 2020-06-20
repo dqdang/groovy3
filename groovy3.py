@@ -170,4 +170,5 @@ async def on_voice_state_update(member, before, after):
                         print("Error: no message could be sent to channel #%s on server %s. Exception: %s" % (
                             CHANNEL_NAME, server, exception))
 
+
 client.run(TOKEN)
