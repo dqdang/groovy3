@@ -38,7 +38,7 @@ def create_tables():
 
 
 def user_exists(user, sess=start_sess()):
-    return sess.query(Seen).filter(Seen.unique_id == user).scalar()
+    return sess.query(Seen).filter(Seen.id == user).scalar()
 
 
 def insert_user(value, timestamp):
@@ -48,7 +48,7 @@ def insert_user(value, timestamp):
         sess.close()
         return False
 
-    user = Seen(unique_id=value)
+    user = Seen(id=value)
     user.timestamp = timestamp
 
     sess.add(user)
@@ -75,9 +75,9 @@ def get_table(table, column):
     return [] if len(results) == 0 else list(zip(*results))[0]
 
 
-def get_timestamp(unique_id):
+def get_timestamp(id):
     sess = start_sess()
-    user = user_exists(unique_id, sess)
+    user = user_exists(id, sess)
     if user:
         rv = user.timestamp
         sess.close()
@@ -86,9 +86,9 @@ def get_timestamp(unique_id):
     return None
 
 
-def change_timestamp(unique_id, timestamp):
+def change_timestamp(id, timestamp):
     sess = start_sess()
-    user = user_exists(unique_id, sess)
+    user = user_exists(id, sess)
 
     if user:
         user.timestamp = timestamp
@@ -100,9 +100,9 @@ def change_timestamp(unique_id, timestamp):
     return False
 
 
-def delete_user(unique_id):
+def delete_user(id):
     sess = start_sess()
-    user = user_exists(unique_id, sess)
+    user = user_exists(id, sess)
 
     if user:
         sess.delete(user)
