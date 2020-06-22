@@ -18,7 +18,7 @@ class Seen(Base):
     __tablename__ = "seen"
     id = Column(Integer, primary_key=True)
     unique_id = Column(Integer, nullable=False, unique=True)
-    timestamp = Column(String, nullable=False, unique=True)
+    timestamp = Column(String)
 
 
 table_dict = {
