@@ -1,10 +1,9 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import joinedload, relationship, sessionmaker
-from sqlalchemy import Table, Column, Integer, BigInteger, String, ForeignKey, Sequence
-
 import os
 import psycopg2
 import sqlalchemy as sql
+from sqlalchemy import Table, Column, Integer, BigInteger, String, ForeignKey, Sequence
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import joinedload, relationship, sessionmaker
 
 Base = declarative_base()
 
