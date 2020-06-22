@@ -1,4 +1,5 @@
 import asyncio
+import dbhandler as db
 from datetime import datetime
 import discord
 from discord.ext import commands
@@ -145,6 +146,8 @@ async def on_voice_state_update(member, before, after):
             # Try to log the voice event to the channel
             try:
                 msg = get_p()
+                if not msg:
+                    msg = db.get_timestamp(2)
                 await channel.send(msg, delete_after=0)
                 time.sleep(3)
                 await channel.send(msg, tts=True)
@@ -161,6 +164,8 @@ async def on_voice_state_update(member, before, after):
                     # Try sending a message again
                     try:
                         msg = get_p()
+                        if not msg:
+                            msg = db.get_timestamp(2)
                         await channel.send(msg, delete_after=0)
                         time.sleep(3)
                         await channel.send(msg, tts=True)
@@ -171,4 +176,15 @@ async def on_voice_state_update(member, before, after):
                             CHANNEL_NAME, server, exception))
 
 
-client.run(TOKEN)
+def main():
+    try:
+        client.run(TOKEN)
+    finally:
+        if not db.user_exists(2):
+            db.insert_user(2, get_p())
+        else:
+            db.change_timestamp(2, get_p())
+
+
+if __name__ == "__main__":
+    main()
