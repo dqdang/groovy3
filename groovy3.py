@@ -104,7 +104,7 @@ async def on_voice_state_update(member, before, after):
     w_member_role = find_role(member, W_ROLE)
     p_member_role = find_role(member, P_ROLE)
 
-    if w_member_role or p_member_role or member.display_name == "wendysad" or member.display_name == "JoyJenerator":
+    if w_member_role or p_member_role or member.display_name == "Groovy Bot 3" or member.display_name == "JoyJenerator":
         try:
             server = after.channel.guild
         except:
@@ -142,7 +142,7 @@ async def on_voice_state_update(member, before, after):
         if p_member_role or member.display_name == "JoyJenerator":
             set_p(msg)
 
-        if w_member_role or member.display_name == "wendysad" and state == "before":
+        if w_member_role or member.display_name == "Groovy Bot 3" and state == "before":
             # Try to log the voice event to the channel
             try:
                 msg = get_p()
