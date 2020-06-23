@@ -14,6 +14,7 @@ P_ROLE = os.getenv("P_ROLE")
 W_ROLE = os.getenv("W_ROLE")
 
 server_channels = {}  # Server channel cache
+p_on = False
 p_seen = {"before": None, "after": None, "switched": None}
 client = discord.Client()
 
@@ -100,6 +101,7 @@ async def on_voice_state_update(member, before, after):
     :param before: The state of the member before the change.
     :param after: The state of the member after the change.
     """
+    global p_on
     tz_CE = pytz.timezone('Canada/Eastern')
     state = ""
     delay = 5
@@ -123,6 +125,8 @@ async def on_voice_state_update(member, before, after):
 
         datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
         if voice_channel_before == None:
+            if p_member_role:
+                p_on = True
             # The member was not on a voice channel before the change
             msg = "%s joined voice channel _%s_ at %s" % (
                 member.display_name, voice_channel_after.name, datetime_CE)
@@ -130,6 +134,8 @@ async def on_voice_state_update(member, before, after):
         else:
             # The member was on a voice channel before the change
             if voice_channel_after == None:
+                if p_member_role:
+                    p_on = False
                 # The member is no longer on a voice channel after the change
                 msg = "%s left voice channel _%s_ at %s" % (
                     member.display_name, voice_channel_before.name, datetime_CE)
@@ -144,7 +150,7 @@ async def on_voice_state_update(member, before, after):
             print("Logged {} for {}".format(msg, p_member_role))
             set_p(msg)
 
-        if w_member_role or member.display_name == "Groovy Bot 3" and state == "before":
+        if (w_member_role or member.display_name == "Groovy Bot 3") and state == "before" and not p_on:
             # Try to log the voice event to the channel
             try:
                 msg = get_p()
