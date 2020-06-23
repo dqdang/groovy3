@@ -102,6 +102,7 @@ async def on_voice_state_update(member, before, after):
     """
     tz_CE = pytz.timezone('Canada/Eastern')
     state = ""
+    delay = 5
 
     w_member_role = find_role(member, W_ROLE)
     p_member_role = find_role(member, P_ROLE)
@@ -151,7 +152,7 @@ async def on_voice_state_update(member, before, after):
                     msg = db.get_timestamp(2)
                     set_p(msg)
                 await channel.send(msg, delete_after=0)
-                time.sleep(3)
+                time.sleep(delay)
                 await channel.send(msg, tts=True)
                 # for i in range(15):
                 #     await channel.send(w_member_role.mention)
@@ -170,7 +171,7 @@ async def on_voice_state_update(member, before, after):
                             msg = db.get_timestamp(2)
                             set_p(msg)
                         await channel.send(msg, delete_after=0)
-                        time.sleep(3)
+                        time.sleep(delay)
                         await channel.send(msg, tts=True)
                         # for i in range(15):
                         #     await channel.send(w_member_role.mention)
