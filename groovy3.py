@@ -39,10 +39,12 @@ def set_p(timestamp):
     """
     if "joined" in timestamp:
         p_seen["before"] = timestamp
-    elif "left" in timestamp:
-        p_seen["after"] = timestamp
     elif "switched" in timestamp:
         p_seen["switched"] = timestamp
+    # elif "left" in timestamp:
+    #     p_seen["after"] = timestamp
+    else:
+        p_seen["after"] = timestamp
     return
 
 
@@ -118,9 +120,9 @@ async def on_voice_state_update(member, before, after):
             # No change
             return
 
+        datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
         if voice_channel_before == None:
             # The member was not on a voice channel before the change
-            datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
             msg = "%s joined voice channel _%s_ at %s" % (
                 member.display_name, voice_channel_after.name, datetime_CE)
             state = "before"
@@ -128,18 +130,17 @@ async def on_voice_state_update(member, before, after):
             # The member was on a voice channel before the change
             if voice_channel_after == None:
                 # The member is no longer on a voice channel after the change
-                datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
                 msg = "%s left voice channel _%s_ at %s" % (
                     member.display_name, voice_channel_before.name, datetime_CE)
                 state = "after"
             else:
                 # The member is still on a voice channel after the change
-                datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
                 msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (
                     member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
                 state = "switched"
 
         if p_member_role or member.display_name == "JoyJenerator":
+            print("Logged {} for {}".format(msg, p_member_role))
             set_p(msg)
 
         if w_member_role or member.display_name == "Groovy Bot 3" and state == "before":
@@ -148,6 +149,7 @@ async def on_voice_state_update(member, before, after):
                 msg = get_p()
                 if not msg:
                     msg = db.get_timestamp(2)
+                    set_p(msg)
                 await channel.send(msg, delete_after=0)
                 time.sleep(3)
                 await channel.send(msg, tts=True)
@@ -166,6 +168,7 @@ async def on_voice_state_update(member, before, after):
                         msg = get_p()
                         if not msg:
                             msg = db.get_timestamp(2)
+                            set_p(msg)
                         await channel.send(msg, delete_after=0)
                         time.sleep(3)
                         await channel.send(msg, tts=True)
