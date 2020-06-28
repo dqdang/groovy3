@@ -29,12 +29,13 @@ def get_p():
     #     return p_seen["after"]
     # if state == "switched":
     #     return p_seen["switched"]
+
     return p_seen["after"]
 
 
 def set_p(timestamp):
     """
-    Set Dango's last seen location with a timestamp
+    Set my boy's last seen location with a timestamp
 
     :param timestamp: The time and message to save
     """
@@ -46,6 +47,7 @@ def set_p(timestamp):
     #     p_seen["after"] = timestamp
     else:
         p_seen["after"] = timestamp
+
     return
 
 
