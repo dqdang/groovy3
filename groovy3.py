@@ -16,6 +16,7 @@ W_ROLE = os.getenv("W_ROLE")
 server_channels = {}  # Server channel cache
 p_on = False
 p_seen = {"before": None, "after": None, "switched": None}
+p_id = 2
 client = discord.Client()
 
 
@@ -93,6 +94,8 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
+    last_seen = db.get_timestamp(p_id)
+    print("Last seen: {}".format(last_seen))
 
 
 @client.event
@@ -157,7 +160,7 @@ async def on_voice_state_update(member, before, after):
             try:
                 msg = get_p()
                 if not msg:
-                    msg = db.get_timestamp(2)
+                    msg = db.get_timestamp(p_id)
                     set_p(msg)
                 await channel.send(msg, delete_after=0)
                 time.sleep(delay)
@@ -176,7 +179,7 @@ async def on_voice_state_update(member, before, after):
                     try:
                         msg = get_p()
                         if not msg:
-                            msg = db.get_timestamp(2)
+                            msg = db.get_timestamp(p_id)
                             set_p(msg)
                         await channel.send(msg, delete_after=0)
                         time.sleep(delay)
@@ -192,10 +195,10 @@ def main():
     try:
         client.run(TOKEN)
     finally:
-        if not db.user_exists(2):
-            db.insert_user(2, get_p())
+        if not db.user_exists(p_id):
+            db.insert_user(p_id, get_p())
         else:
-            db.change_timestamp(2, get_p())
+            db.change_timestamp(p_id, get_p())
 
 
 if __name__ == "__main__":
