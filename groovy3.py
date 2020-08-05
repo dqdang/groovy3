@@ -198,7 +198,11 @@ def main():
         if not db.user_exists(p_id):
             db.insert_user(p_id, get_p())
         else:
-            db.change_timestamp(p_id, get_p())
+            last_seen = get_p()
+            if last_seen:
+                db.change_timestamp(p_id, get_p())
+            else:
+                print(p_seen)
 
 
 if __name__ == "__main__":
