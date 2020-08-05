@@ -95,6 +95,7 @@ async def on_ready():
     print(client.user.id)
     print('------')
     last_seen = db.get_timestamp(p_id)
+    set_p(last_seen)
     print("Last seen: {}".format(last_seen))
 
 
@@ -203,6 +204,10 @@ def main():
                 db.change_timestamp(p_id, get_p())
             else:
                 print(p_seen)
+                for key in p_seen.keys():
+                    if p_seen[key]:
+                        db.change_timestamp(p_id, p_seen[key])
+                        break
 
 
 if __name__ == "__main__":
