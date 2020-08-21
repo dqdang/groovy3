@@ -129,7 +129,9 @@ async def on_voice_state_update(member, before, after):
             # No change
             return
 
-        datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
+        # datetime_CE = datetime.now(tz_CE).strftime("%H:%M:%S %p %Z")
+        datetime_CE = datetime.now(tz_CE).strftime("%H:%M %p %Z on %b-%d-%Y")
+
         if voice_channel_before == None:
             if p_member_role:
                 p_on = True
@@ -143,7 +145,9 @@ async def on_voice_state_update(member, before, after):
                 if p_member_role:
                     p_on = False
                 # The member is no longer on a voice channel after the change
-                msg = "%s left voice channel _%s_ at %s" % (
+                # msg = "%s left voice channel _%s_ at %s" % (
+                #     member.display_name, voice_channel_before.name, datetime_CE)
+                msg = "%s left Discord at %s" % (
                     member.display_name, voice_channel_before.name, datetime_CE)
                 state = "after"
             else:
