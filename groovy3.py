@@ -115,7 +115,7 @@ async def on_voice_state_update(member, before, after):
     w_member_role = find_role(member, W_ROLE)
     p_member_role = find_role(member, P_ROLE)
 
-    if w_member_role or p_member_role or member.display_name == "Groovy Bot 3" or member.display_name == "JoyJenerator":
+    if w_member_role or p_member_role or member.name == "Groovy Bot 3" or member.name == "JoyJenerator":
         try:
             server = after.channel.guild
         except:
@@ -137,7 +137,7 @@ async def on_voice_state_update(member, before, after):
                 p_on = True
             # The member was not on a voice channel before the change
             msg = "%s joined voice channel _%s_ at %s" % (
-                member.display_name, voice_channel_after.name, datetime_CE)
+                member.name, voice_channel_after.name, datetime_CE)
             state = "before"
         else:
             # The member was on a voice channel before the change
@@ -146,21 +146,21 @@ async def on_voice_state_update(member, before, after):
                     p_on = False
                 # The member is no longer on a voice channel after the change
                 # msg = "%s left voice channel _%s_ at %s" % (
-                #     member.display_name, voice_channel_before.name, datetime_CE)
+                #     member.name, voice_channel_before.name, datetime_CE)
                 msg = "%s left Discord at %s" % (
-                    member.display_name, datetime_CE)
+                    member.name, datetime_CE)
                 state = "after"
             else:
                 # The member is still on a voice channel after the change
                 msg = "%s switched from voice channel _%s_ to _%s_ at %s" % (
-                    member.display_name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
+                    member.name, voice_channel_before.name, voice_channel_after.name, datetime_CE)
                 state = "switched"
 
-        if p_member_role or member.display_name == "JoyJenerator":
+        if p_member_role or member.name == "JoyJenerator":
             print("Logged {} for {}".format(msg, p_member_role))
             set_p(msg)
 
-        if (w_member_role or member.display_name == "Groovy Bot 3") and state == "before" and not p_on:
+        if (w_member_role or member.name == "Groovy Bot 3") and state == "before" and not p_on:
             # Try to log the voice event to the channel
             try:
                 msg = get_p()
