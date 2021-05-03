@@ -1,5 +1,5 @@
 SQLAlchemy==1.4.12
-discord.py==1.7.1
+discord.py==1.7.2
 pytz==2021.1
 psycopg2_binary==2.8.6
 discord==1.0.1
