@@ -1,4 +1,4 @@
-SQLAlchemy==1.4.32
+SQLAlchemy==1.4.33
 discord.py==1.7.3
 pytz==2022.1
 psycopg2_binary==2.9.3
