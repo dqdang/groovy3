@@ -3,4 +3,4 @@ discord.py==2.2.2
 pytz==2023.3
 psycopg2_binary==2.9.5
 discord==2.2.2
-psycopg2==2.9.5
+psycopg2==2.9.6
