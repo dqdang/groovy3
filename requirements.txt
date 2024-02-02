@@ -1,6 +1,6 @@
 SQLAlchemy==2.0.25
 discord.py==2.3.2
-pytz==2023.4
+pytz==2024.1
 psycopg2_binary==2.9.9
 discord==2.3.2
 psycopg2==2.9.9
